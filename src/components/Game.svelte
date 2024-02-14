@@ -28,8 +28,6 @@
     }
   }
 
-  $: console.log($players);
-
   $: sortedPlayers = $players?.toSorted((a, b) => a.score - b.score) ?? [];
 
   onMount(() => {

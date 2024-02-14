@@ -45,6 +45,13 @@ export const updateDifficulty = (newLevel: number) => {
 
 export const restartGame = () => {
   sendMessage("restart_game", {});
+  players.update((oldPlayers) => {
+    oldPlayers.forEach((p) => {
+      p.score = 0;
+      p.done = false;
+    });
+    return [...oldPlayers];
+  });
   page.set("host");
 };
 
