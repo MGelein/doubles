@@ -39,14 +39,12 @@
   });
 
   const handleSelection = (emoji: EmojiType, selected: boolean) => {
+    if (selected) selectedEmojis.push(emoji);
     if (!selected) {
       selectedEmojis = selectedEmojis.filter((e) => e !== emoji);
-      return;
     }
 
-    selectedEmojis.push(emoji);
     const set = new Set(selectedEmojis);
-
     if (set.size !== selectedEmojis.length && selectedEmojis.length === 2) {
       timeTaken = Date.now() - startTime;
       selectedEmojis = [];
