@@ -1,0 +1,75 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  font-size: 62.5%;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow: hidden;
+
+  --c-900: #223;
+  --c-800: #334;
+  --c-700: #556;
+  --c-600: #667;
+  --c-500: #778;
+  --c-400: #889;
+  --c-300: #aab;
+  --c-200: #ccd;
+  --c-100: #fff;
+
+  --fs-title: 4.8rem;
+  --fs-input: 2rem;
+  --fs-button: 1.6rem;
+  --fs-puzzle: 4rem;
+
+  --p-tiny: 0.4rem;
+  --p-small: 0.8rem;
+  --p-medium: 1.2rem;
+  --p-large: 1.6rem;
+  --p-huge: 2.4rem;
+
+  --s-soft: 0 0 2.4rem rgba(0, 0, 0, 0.6);
+  --s-medium: 0.2rem 0.2rem 0.8rem rgba(0, 0, 0, 0.4);
+  --s-hard: 0.2rem 0.2rem 0.4rem rgba(0, 0, 0, 0.6);
+
+  --r-small: 0.4rem;
+}
+
+#app {
+  font-size: 1.6rem;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#app:before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -50vh;
+  bottom: -50vh;
+  left: -50vw;
+  right: -50vw;
+  background: radial-gradient(
+    circle at center right,
+    var(--c-800),
+    var(--c-900)
+  );
+  animation: moveBackground 10s ease-in-out alternate-reverse infinite;
+}
+
+@keyframes moveBackground {
+  from {
+    transform: translate(-50vw, -50vh);
+  }
+
+  to {
+    transform: translate(50vw, 50vh);
+  }
+}
