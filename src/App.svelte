@@ -5,6 +5,7 @@
   import Title from "./components/Title.svelte";
   import Game from "./components/Game.svelte";
   import { page } from "./util/api";
+  import Score from "./components/Score.svelte";
 
   onMount(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -21,6 +22,8 @@
     <Join on:ready={() => ($page = "game")} />
   {:else if $page === "game"}
     <Game />
+  {:else if $page === "score"}
+    <Score />
   {/if}
 </main>
 

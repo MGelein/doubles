@@ -50,7 +50,7 @@ export const createRemote = (id: string) => {
 
   peer.onData((message) => {
     const { action, data } = message as GameMessage;
-    console.log({ action, data });
+
     switch (action) {
       case "register_time":
         updatePlayerScore(data.id, data.time);
@@ -125,7 +125,6 @@ export const createController = (
 
   peer.onData((message) => {
     const { action, data } = message as GameMessage;
-    console.log({ action, data });
 
     switch (action) {
       case "goto_page":
