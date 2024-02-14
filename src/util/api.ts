@@ -26,6 +26,7 @@ type MessageType =
   | "list_players"
   | "rejected"
   | "start_game"
+  | "restart_game"
   | "new_puzzle"
   | "goto_page"
   | "difficulty_change"
@@ -39,6 +40,11 @@ type GameMessage = {
 export const updateDifficulty = (newLevel: number) => {
   difficulty.set(newLevel);
   sendMessage("difficulty_change", newLevel);
+};
+
+export const restartGame = () => {
+  sendMessage("restart_game", {});
+  page.set("host");
 };
 
 export const createRemote = (id: string) => {
@@ -135,6 +141,9 @@ export const createController = (
     console.log({ action, data });
 
     switch (action) {
+      case "restart_game":
+        page.set("join");
+        break;
       case "difficulty_change":
         difficulty.set(data);
         break;

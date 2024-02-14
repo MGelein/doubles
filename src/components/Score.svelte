@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { isHost, players } from "../util/api";
+  import { isHost, players, restartGame } from "../util/api";
   import Banner from "./Banner.svelte";
   import BoardEntry from "./BoardEntry.svelte";
   import Button from "./Button.svelte";
@@ -15,7 +15,7 @@
 </section>
 {#if $isHost}
   <section class="button-wrap">
-    <Button on:click={() => window.location.reload()}>restart</Button>
+    <Button on:click={restartGame}>restart</Button>
   </section>
 {/if}
 
