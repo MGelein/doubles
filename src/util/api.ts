@@ -4,12 +4,18 @@ import { TRINNRemote, TRINNController } from "trinn-remote-control";
 const NEXT_ROUND_INTERVAL = 5000;
 export const GAMES_IN_ROUND = 5;
 
+export type Difficulty = 3 | 4 | 5;
+export const EASY: Difficulty = 3;
+export const NORMAL: Difficulty = 4;
+export const HARD: Difficulty = 5;
+
 export let players = writable<Player[]>([]);
 export let isHost = writable<boolean>(false);
 export let puzzle = writable<Puzzle | null>(null);
 export let peerId = writable<string>("");
 export let gameNumber = writable<number>(0);
 export let page = writable<string>("title");
+export let difficulty = writable<Difficulty>(EASY);
 
 export type Player = {
   id: string;
@@ -27,11 +33,17 @@ type MessageType =
   | "start_game"
   | "new_puzzle"
   | "goto_page"
+  | "difficulty_change"
   | "register_time";
 
 type GameMessage = {
   action: MessageType;
   data: any;
+};
+
+export const updateDifficulty = (newLevel: Difficulty) => {
+  difficulty.set(newLevel);
+  sendMessage("difficulty_change", newLevel);
 };
 
 export const createRemote = (id: string) => {
@@ -127,6 +139,9 @@ export const createController = (
     const { action, data } = message as GameMessage;
 
     switch (action) {
+      case "difficulty_change":
+        difficulty.set(data);
+        break;
       case "goto_page":
         page.set(data);
         break;

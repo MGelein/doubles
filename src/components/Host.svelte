@@ -3,7 +3,16 @@
   import Banner from "./Banner.svelte";
   import Button from "./Button.svelte";
   import { onMount, createEventDispatcher } from "svelte";
-  import { createRemote, gameNumber, players, sendMessage } from "../util/api";
+  import {
+    EASY,
+    NORMAL,
+    HARD,
+    createRemote,
+    difficulty,
+    gameNumber,
+    players,
+    sendMessage,
+  } from "../util/api";
   import PlayerList from "./PlayerList.svelte";
 
   const username = localStorage.getItem("username") ?? "";
@@ -30,10 +39,27 @@
 
 <Banner>new game</Banner>
 <section class="cta-wrap">
-  <span class="cta">Scan QR to join:</span>
+  <h1 class="cta">Scan QR to join:</h1>
 </section>
 <section class="qr-wrap">
   <canvas class="canvas" bind:this={canvas}></canvas>
+</section>
+<section class="difficulty-wrap">
+  <h1>Difficulty:</h1>
+  <div class="difficulty-buttons">
+    <Button
+      selected={$difficulty === EASY}
+      on:click={() => ($difficulty = EASY)}>Easy</Button
+    >
+    <Button
+      selected={$difficulty === NORMAL}
+      on:click={() => ($difficulty = NORMAL)}>Normal</Button
+    >
+    <Button
+      selected={$difficulty === HARD}
+      on:click={() => ($difficulty = HARD)}>Hard</Button
+    >
+  </div>
 </section>
 <PlayerList {username} />
 <section class="button-wrap">
@@ -47,7 +73,7 @@
       }
     }}
   >
-    {#if $players.length > 0}ready{:else}waiting{/if}</Button
+    {#if $players.length > 0}ready!{:else}waiting{/if}</Button
   >
 </section>
 
@@ -59,6 +85,24 @@
       display: flex;
       justify-content: center;
       align-items: center;
+    }
+  }
+
+  .difficulty {
+    &-wrap {
+      color: var(--c-200);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: var(--p-small);
+    }
+
+    &-buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: var(--p-small);
     }
   }
 

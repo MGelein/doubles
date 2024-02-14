@@ -1,8 +1,9 @@
 <script lang="ts">
   export let disabled = false;
+  export let selected = false;
 </script>
 
-<button class:disabled on:click><slot /></button>
+<button class:disabled class:selected on:click><slot /></button>
 
 <style lang="scss">
   button {
@@ -18,6 +19,12 @@
     transition:
       transform 0.2s ease-out,
       opacity 0.2s ease-out;
+
+    &.selected {
+      box-shadow: none;
+      border-width: 0.4rem;
+      transform: scale(1.05);
+    }
 
     &:active {
       transform: scale(0.95);
