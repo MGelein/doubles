@@ -149,7 +149,7 @@ export type Emoji = (typeof animals)[number];
 type Row = Emoji[];
 export type Puzzle = Row[];
 
-const animals = [
+export const animals = [
   "🐘",
   "🦘",
   "🦑",
