@@ -4,9 +4,6 @@
   import Button from "./Button.svelte";
   import { onMount, createEventDispatcher } from "svelte";
   import {
-    EASY,
-    NORMAL,
-    HARD,
     createRemote,
     difficulty,
     gameNumber,
@@ -48,18 +45,12 @@
 <section class="difficulty-wrap">
   <h1>Difficulty:</h1>
   <div class="difficulty-buttons">
-    <Button
-      selected={$difficulty === EASY}
-      on:click={() => updateDifficulty(EASY)}>Easy</Button
-    >
-    <Button
-      selected={$difficulty === NORMAL}
-      on:click={() => updateDifficulty(NORMAL)}>Normal</Button
-    >
-    <Button
-      selected={$difficulty === HARD}
-      on:click={() => updateDifficulty(HARD)}>Hard</Button
-    >
+    {#each [2, 3, 4, 5, 6] as level}
+      <Button
+        selected={$difficulty === level}
+        on:click={() => updateDifficulty(level)}>{level}</Button
+      >
+    {/each}
   </div>
 </section>
 <PlayerList {username} />

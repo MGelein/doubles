@@ -1,11 +1,6 @@
 <script lang="ts">
   import Button from "./Button.svelte";
-  import {
-    createController,
-    players,
-    difficulty,
-    difficultyLevelToString,
-  } from "../util/api";
+  import { createController, players, difficulty } from "../util/api";
   import PlayerList from "./PlayerList.svelte";
   import Banner from "./Banner.svelte";
   import { createEventDispatcher } from "svelte";
@@ -39,7 +34,7 @@
 {#if $players.length > 0}
   <section class="difficulty-wrap">
     <h1>Difficulty:</h1>
-    <span class="difficulty">{difficultyLevelToString($difficulty)}</span>
+    <span class="difficulty">{$difficulty}x{$difficulty}</span>
   </section>
   <PlayerList {username} />
 {:else}
