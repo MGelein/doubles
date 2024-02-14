@@ -13,7 +13,7 @@
   };
 </script>
 
-<Banner>reactions</Banner>
+<Banner>Doubles</Banner>
 <section class="text-wrap">
   <input
     class="text"
