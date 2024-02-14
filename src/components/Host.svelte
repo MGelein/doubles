@@ -3,7 +3,7 @@
   import Banner from "./Banner.svelte";
   import Button from "./Button.svelte";
   import { onMount, createEventDispatcher } from "svelte";
-  import { createRemote, players, sendMessage } from "../util/api";
+  import { createRemote, gameNumber, players, sendMessage } from "../util/api";
   import PlayerList from "./PlayerList.svelte";
 
   const username = localStorage.getItem("username") ?? "";
@@ -42,6 +42,7 @@
     on:click={() => {
       if ($players.length > 0) {
         dispatch("ready");
+        $gameNumber = 0;
         sendMessage("start_game", {});
       }
     }}

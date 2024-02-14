@@ -1,12 +1,15 @@
-import { writable } from "svelte/store";
+import { writable, get } from "svelte/store";
 import { TRINNRemote, TRINNController } from "trinn-remote-control";
 
 const NEXT_ROUND_INTERVAL = 5000;
+export const GAMES_IN_ROUND = 5;
 
 export let players = writable<Player[]>([]);
 export let isHost = writable<boolean>(false);
 export let puzzle = writable<Puzzle | null>(null);
 export let peerId = writable<string>("");
+export let gameNumber = writable<number>(0);
+export let page = writable<string>("title");
 
 export type Player = {
   id: string;
@@ -23,6 +26,7 @@ type MessageType =
   | "rejected"
   | "start_game"
   | "new_puzzle"
+  | "goto_page"
   | "register_time";
 
 type GameMessage = {
@@ -86,15 +90,21 @@ export const updatePlayerScore = (id: string, time: number) => {
       const newPlayers = [playerToUpdate, ...otherPlayers];
       const allDone = !newPlayers.some((p) => !p.done);
       if (allDone) {
-        setTimeout(() => {
-          generatePuzzle(3);
-        }, NEXT_ROUND_INTERVAL);
+        const numberOfGamesPlayed = get(gameNumber);
+
+        if (numberOfGamesPlayed < GAMES_IN_ROUND) {
+          setTimeout(() => {
+            generatePuzzle(3);
+          }, NEXT_ROUND_INTERVAL);
+        } else {
+          sendMessage("goto_page", "score");
+          page.set("score");
+        }
       }
       sendMessage("list_players", newPlayers);
       return newPlayers;
-    } else {
-      return oldPlayers;
     }
+    return oldPlayers;
   });
 };
 
@@ -118,10 +128,15 @@ export const createController = (
     console.log({ action, data });
 
     switch (action) {
+      case "goto_page":
+        page.set(data);
+        break;
       case "start_game":
+        gameNumber.set(0);
         onStartGame();
         break;
       case "new_puzzle":
+        gameNumber.update((old) => old + 1);
         puzzle.set(data);
         break;
       case "list_players":
@@ -171,6 +186,8 @@ export const generatePuzzle = (size: number) => {
     });
     return [...oldPlayers];
   });
+
+  gameNumber.update((old) => old + 1);
   sendMessage("new_puzzle", newPuzzle);
 };
 

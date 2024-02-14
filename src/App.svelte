@@ -4,23 +4,22 @@
   import Join from "./components/Join.svelte";
   import Title from "./components/Title.svelte";
   import Game from "./components/Game.svelte";
+  import { page } from "./util/api";
 
   onMount(() => {
     const searchParams = new URLSearchParams(window.location.search);
-    if (searchParams.get("gameId")) page = "join";
+    if (searchParams.get("gameId")) $page = "join";
   });
-
-  let page = "title";
 </script>
 
 <main>
-  {#if page === "title"}
-    <Title on:join={() => (page = "join")} on:host={() => (page = "host")} />
-  {:else if page === "host"}
-    <Host on:ready={() => (page = "game")} />
-  {:else if page === "join"}
-    <Join on:ready={() => (page = "game")} />
-  {:else if page === "game"}
+  {#if $page === "title"}
+    <Title on:join={() => ($page = "join")} on:host={() => ($page = "host")} />
+  {:else if $page === "host"}
+    <Host on:ready={() => ($page = "game")} />
+  {:else if $page === "join"}
+    <Join on:ready={() => ($page = "game")} />
+  {:else if $page === "game"}
     <Game />
   {/if}
 </main>

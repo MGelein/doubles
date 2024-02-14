@@ -9,6 +9,8 @@
     peerId,
     updatePlayerScore,
     players,
+    gameNumber,
+    GAMES_IN_ROUND,
   } from "../util/api";
   import Emoji from "./Emoji.svelte";
   import Banner from "./Banner.svelte";
@@ -60,8 +62,9 @@
 </script>
 
 {#if $puzzle !== null && timeTaken == 0}
+  <Banner>Game {$gameNumber}/{GAMES_IN_ROUND}</Banner>
   <section class="puzzle-wrap">
-    <h1>Find the matching set:</h1>
+    <h1>Tap the matching set:</h1>
     <div class="puzzle" style={`--puzzle-size: ${puzzleSize}`}>
       {#each $puzzle as row}
         {#each row as emoji}
