@@ -1,12 +1,14 @@
 import { writable } from "svelte/store";
 import { TRINNRemote, TRINNController } from "trinn-remote-control";
 
+const NEXT_ROUND_INTERVAL = 5000;
+
 export let players = writable<Player[]>([]);
 export let isHost = writable<boolean>(false);
 export let puzzle = writable<Puzzle | null>(null);
-export let playerName = writable<string>("");
+export let peerId = writable<string>("");
 
-type Player = {
+export type Player = {
   id: string;
   name: string;
   score: number;
@@ -38,6 +40,7 @@ export const createRemote = (id: string) => {
   peer = new TRINNRemote(id);
 
   peer.onCreate((id) => {
+    peerId.set(id);
     players.set([{ id, name: username, score: 0, done: true }]);
   });
 
@@ -46,6 +49,7 @@ export const createRemote = (id: string) => {
     console.log({ action, data });
     switch (action) {
       case "register_time":
+        updatePlayerScore(data.id, data.time);
         break;
       case "join":
         const newPlayer = {
@@ -60,7 +64,7 @@ export const createRemote = (id: string) => {
             return oldPlayers;
           } else {
             const newPlayers = [...oldPlayers, newPlayer];
-            sendMessage("list_players", { players: newPlayers });
+            sendMessage("list_players", newPlayers);
             return newPlayers;
           }
         });
@@ -68,6 +72,28 @@ export const createRemote = (id: string) => {
       default:
         console.log("unhandled message type:", action);
         break;
+    }
+  });
+};
+
+export const updatePlayerScore = (id: string, time: number) => {
+  players.update((oldPlayers) => {
+    const playerToUpdate = oldPlayers.find((p) => p.id === id);
+    const otherPlayers = oldPlayers.filter((p) => p.id !== id);
+    if (playerToUpdate) {
+      playerToUpdate.score += time;
+      playerToUpdate.done = true;
+      const newPlayers = [playerToUpdate, ...otherPlayers];
+      const allDone = !newPlayers.some((p) => !p.done);
+      if (allDone) {
+        setTimeout(() => {
+          generatePuzzle(3);
+        }, NEXT_ROUND_INTERVAL);
+      }
+      sendMessage("list_players", newPlayers);
+      return newPlayers;
+    } else {
+      return oldPlayers;
     }
   });
 };
@@ -80,6 +106,9 @@ export const createController = (
   if (peer) return sendMessage("join", { name });
 
   peer = new TRINNController(id);
+  peer.onCreate((id) => {
+    peerId.set(id);
+  });
   peer.onConnection(() => {
     sendMessage("join", { name, id: peer.id });
   });
@@ -96,7 +125,7 @@ export const createController = (
         puzzle.set(data);
         break;
       case "list_players":
-        players.set(data.players as Player[]);
+        players.update(() => data as Player[]);
         break;
       default:
         console.log("unhandled message type: ", action);

@@ -6,8 +6,13 @@
     isHost,
     puzzle,
     sendMessage,
+    peerId,
+    updatePlayerScore,
+    players,
   } from "../util/api";
   import Emoji from "./Emoji.svelte";
+  import Banner from "./Banner.svelte";
+  import BoardEntry from "./BoardEntry.svelte";
 
   const puzzleSize = 3;
   let selectedEmojis: EmojiType[] = [];
@@ -20,6 +25,10 @@
       timeTaken = 0;
     }
   }
+
+  $: console.log($players);
+
+  $: sortedPlayers = $players?.toSorted((a, b) => a.score - b.score) ?? [];
 
   onMount(() => {
     if ($isHost) {
@@ -38,8 +47,14 @@
 
     if (set.size !== selectedEmojis.length && selectedEmojis.length === 2) {
       timeTaken = Date.now() - startTime;
+      selectedEmojis = [];
       $puzzle = null;
-      if (!$isHost) sendMessage("register_time", { time: timeTaken });
+
+      if (!$isHost) {
+        sendMessage("register_time", { time: timeTaken, id: $peerId });
+      } else {
+        updatePlayerScore($peerId, timeTaken);
+      }
     }
   };
 </script>
@@ -60,8 +75,12 @@
     </div>
   </section>
 {:else if timeTaken > 0}
+  <Banner>{timeTaken / 1000}s</Banner>
   <section class="time-wrap">
-    <h1 class="time">Time: {timeTaken / 1000}s</h1>
+    <h1 class="time">Leaderboard:</h1>
+    {#each sortedPlayers as player, index}
+      <BoardEntry {player} {index} />
+    {/each}
   </section>
 {:else}
   <section class="time-wrap">
@@ -92,6 +111,7 @@
 
     &-wrap {
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
     }
