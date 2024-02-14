@@ -1,6 +1,11 @@
 <script lang="ts">
   import Button from "./Button.svelte";
-  import { createController, players } from "../util/api";
+  import {
+    createController,
+    players,
+    difficulty,
+    difficultyLevelToString,
+  } from "../util/api";
   import PlayerList from "./PlayerList.svelte";
   import Banner from "./Banner.svelte";
   import { createEventDispatcher } from "svelte";
@@ -32,6 +37,10 @@
 </section>
 
 {#if $players.length > 0}
+  <section class="difficulty-wrap">
+    <h1>Difficulty:</h1>
+    <span class="difficulty">{difficultyLevelToString($difficulty)}</span>
+  </section>
   <PlayerList {username} />
 {:else}
   <section class="buttons-wrap">
@@ -56,6 +65,18 @@
       justify-content: center;
       align-items: center;
       padding: var(--p-medium);
+    }
+  }
+
+  .difficulty {
+    text-transform: capitalize;
+    &-wrap {
+      color: var(--c-200);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: var(--p-small);
     }
   }
 

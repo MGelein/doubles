@@ -46,6 +46,13 @@ export const updateDifficulty = (newLevel: Difficulty) => {
   sendMessage("difficulty_change", newLevel);
 };
 
+export const difficultyLevelToString = (level: Difficulty) => {
+  if (level === EASY) return "easy";
+  if (level === NORMAL) return "normal";
+  if (level === HARD) return "hard";
+  return "Unsupported";
+};
+
 export const createRemote = (id: string) => {
   isHost.set(true);
   const username = localStorage.getItem("username");
@@ -106,7 +113,7 @@ export const updatePlayerScore = (id: string, time: number) => {
 
         if (numberOfGamesPlayed < GAMES_IN_ROUND) {
           setTimeout(() => {
-            generatePuzzle(3);
+            generatePuzzle(get(difficulty));
           }, NEXT_ROUND_INTERVAL);
         } else {
           sendMessage("goto_page", "score");
@@ -137,6 +144,7 @@ export const createController = (
 
   peer.onData((message) => {
     const { action, data } = message as GameMessage;
+    console.log({ action, data });
 
     switch (action) {
       case "difficulty_change":

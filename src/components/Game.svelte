@@ -11,12 +11,12 @@
     players,
     gameNumber,
     GAMES_IN_ROUND,
+    difficulty,
   } from "../util/api";
   import Emoji from "./Emoji.svelte";
   import Banner from "./Banner.svelte";
   import BoardEntry from "./BoardEntry.svelte";
 
-  const puzzleSize = 3;
   let selectedEmojis: EmojiType[] = [];
   let startTime = 0;
   let timeTaken = 0;
@@ -34,7 +34,7 @@
 
   onMount(() => {
     if ($isHost) {
-      generatePuzzle(puzzleSize);
+      generatePuzzle($difficulty);
     }
   });
 
@@ -65,7 +65,7 @@
   <Banner>Game {$gameNumber}/{GAMES_IN_ROUND}</Banner>
   <section class="puzzle-wrap">
     <h1>Tap the matching set:</h1>
-    <div class="puzzle" style={`--puzzle-size: ${puzzleSize}`}>
+    <div class="puzzle" style={`--puzzle-size: ${$difficulty}`}>
       {#each $puzzle as row}
         {#each row as emoji}
           <Emoji

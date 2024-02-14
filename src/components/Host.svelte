@@ -12,6 +12,7 @@
     gameNumber,
     players,
     sendMessage,
+    updateDifficulty,
   } from "../util/api";
   import PlayerList from "./PlayerList.svelte";
 
@@ -49,15 +50,15 @@
   <div class="difficulty-buttons">
     <Button
       selected={$difficulty === EASY}
-      on:click={() => ($difficulty = EASY)}>Easy</Button
+      on:click={() => updateDifficulty(EASY)}>Easy</Button
     >
     <Button
       selected={$difficulty === NORMAL}
-      on:click={() => ($difficulty = NORMAL)}>Normal</Button
+      on:click={() => updateDifficulty(NORMAL)}>Normal</Button
     >
     <Button
       selected={$difficulty === HARD}
-      on:click={() => ($difficulty = HARD)}>Hard</Button
+      on:click={() => updateDifficulty(HARD)}>Hard</Button
     >
   </div>
 </section>
