@@ -11,6 +11,7 @@ export let peerId = writable<string>("");
 export let gameNumber = writable<number>(0);
 export let page = writable<string>("title");
 export let difficulty = writable<number>(3);
+export let uuid = writable<string>("");
 
 export type Player = {
   id: string;
@@ -47,7 +48,8 @@ export const restartGame = () => {
   page.set("host");
 };
 
-export const createRemote = (id: string) => {
+export const createRemote = () => {
+  const id = get(uuid);
   isHost.set(true);
   const username = localStorage.getItem("username");
   if (username == null) {
@@ -138,7 +140,6 @@ export const createController = (
 
   peer.onData((message) => {
     const { action, data } = message as GameMessage;
-    console.log({ action, data });
 
     switch (action) {
       case "restart_game":

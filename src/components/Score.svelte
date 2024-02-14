@@ -15,7 +15,7 @@
 </section>
 {#if $isHost}
   <section class="button-wrap">
-    <Button on:click={restartGame}>restart</Button>
+    <Button on:click={restartGame}>play again</Button>
   </section>
 {/if}
 

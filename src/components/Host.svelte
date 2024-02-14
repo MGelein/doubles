@@ -10,6 +10,7 @@
     players,
     sendMessage,
     updateDifficulty,
+    uuid,
   } from "../util/api";
   import PlayerList from "./PlayerList.svelte";
 
@@ -24,14 +25,16 @@
   };
 
   onMount(async () => {
-    const UUID = getUUID();
+    if ($players.length < 1) {
+      $uuid = getUUID();
+      createRemote();
+    }
     const searchParams = new URLSearchParams();
-    searchParams.set("gameId", UUID);
+    searchParams.set("gameId", $uuid);
     const qrData = window.location.href + "?" + searchParams.toString();
     QRCode.toCanvas(canvas, qrData, {
       color: { light: "#ccd", dark: "#334" },
     });
-    createRemote(UUID);
   });
 </script>
 
@@ -65,7 +68,7 @@
       }
     }}
   >
-    {#if $players.length > 0}ready!{:else}waiting{/if}</Button
+    {#if $players.length > 0}ready{:else}waiting{/if}</Button
   >
 </section>
 
