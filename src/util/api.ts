@@ -12,6 +12,7 @@ export let gameNumber = writable<number>(0);
 export let page = writable<string>("title");
 export let difficulty = writable<number>(3);
 export let uuid = writable<string>("");
+export let status = writable<string>("");
 
 export type Player = {
   id: string;
@@ -143,6 +144,9 @@ export const createController = (
   });
   peer.onConnection(() => {
     sendMessage("join", { name, id: peer.id });
+  });
+  peer.onStatusChange((newStatus) => {
+    status.set(newStatus);
   });
 
   peer.onData((message) => {

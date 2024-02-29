@@ -1,6 +1,6 @@
 <script lang="ts">
   import Button from "./Button.svelte";
-  import { createController, players, difficulty } from "../util/api";
+  import { createController, players, difficulty, status } from "../util/api";
   import PlayerList from "./PlayerList.svelte";
   import Banner from "./Banner.svelte";
   import { createEventDispatcher } from "svelte";
@@ -14,11 +14,16 @@
   const join = () => {
     createController(gameId, username, () => dispatch("ready"));
   };
+
+  const getButtonLabel = (currentStatus: string) => {
+    if (currentStatus == "waiting") return "...";
+    if (currentStatus === "connecting") return "connecting";
+    if (currentStatus === "connected") return "waiting";
+    return "join";
+  };
 </script>
 
-<Banner
-  >{#if $players.length > 0}waiting{:else}join{/if}</Banner
->
+<Banner>{getButtonLabel($status)}</Banner>
 
 <section class="text-wrap">
   {#if $players.length < 1}
@@ -39,7 +44,9 @@
   <PlayerList {username} />
 {:else}
   <section class="buttons-wrap">
-    <Button disabled={username.trim().length < 1} on:click={join}>join</Button>
+    <Button disabled={username.trim().length < 1} on:click={join}
+      >{getButtonLabel($status)}</Button
+    >
   </section>
 {/if}
 
